@@ -65,3 +65,11 @@ Python
 | BTW            | BTW         | Komentarz jednoliniowy |
 | OBTW           | OBTW        | Początek komentarza blokowego |
 | TLDR           | TLDR        | Koniec komentarza blokowego |
+|WIN|WIN|Wartość logiczna TRUE|
+|FAIL|FAIL|Wartość logiczna FALSE|
+| IDENTIFIER | [a-zA-Z][a-zA-Z0-9_]* | Nazwa zmiennej |
+| STRING | "[^"]*"| Literał tekstowy |
+| NUMBER | [0-9]+ | Liczba całkowita |
+| WHITESPACE | [ \t]+ | Separatory składni (spacje, tabulatory, nowe linie) |
+| NEWLINE | \n | Koniec instrukcji / separator linii |
+| EOF | EOF | Oznacza koniec pliku / końca wejścia |
