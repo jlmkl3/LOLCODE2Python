@@ -1,3 +1,4 @@
+# LOLCODE to Python transpiler
 # Dane kontaktowe 
 ### Maria Pichór: mpichor@student.agh.edu.pl
 ### Julia Mikuła: jmikula@student.agh.edu.pl
@@ -74,6 +75,8 @@ Python
 | NEWLINE | \n | Koniec instrukcji / separator linii |
 | EOF | EOF | Oznacza koniec pliku / końca wejścia |
 
+
+## Gramatyka ANTLR4
 ```antlr
 grammar Lolcode;
 
