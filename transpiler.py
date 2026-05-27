@@ -65,6 +65,11 @@ class Lolcode2Python(LolcodeVisitor):
 
         return "\n".join(lines)
     
+    def ensure_body(self, body_code):
+        if not body_code.strip():
+            return f"{self.get_indent()}pass"
+        return body_code
+    
     def visitComment(self, ctx: LolcodeParser.CommentContext):
         text = ctx.getText()
         
@@ -134,13 +139,19 @@ class Lolcode2Python(LolcodeVisitor):
         res = [f"if {condition}:"]
         
         self.indent_level += 1
-        res.append(self.visit(ctx.body(0)))
+
+        body = self.visit(ctx.body(0))
+        res.append(self.ensure_body(body))
+
         self.indent_level -= 1
 
         if ctx.NO_WAI():
             res.append("else:")
             self.indent_level += 1
-            res.append(self.visit(ctx.body(1)))
+
+            body = self.visit(ctx.body(1))
+            res.append(self.ensure_body(body))
+
             self.indent_level -= 1
         return "\n".join(res)
 
@@ -157,19 +168,37 @@ class Lolcode2Python(LolcodeVisitor):
         if ctx.SMALLR_OF(): return f"min({left}, {right})"
         if ctx.BOTH_OF(): return f"({left} and {right})"
         if ctx.EITHER_OF(): return f"({left} or {right})"
-        if ctx.WON_OF(): return f"({left} ^ {right})"
+        if ctx.WON_OF(): return f"(bool({left}) != bool({right}))"
         if ctx.BOTH_SAEM(): return f"({left} == {right})"
         if ctx.DIFFRINT(): return f"({left} != {right})"
-        return ""
+        return self.visitChildren(ctx)
     
     def visitLoop_stmt(self, ctx: LolcodeParser.Loop_stmtContext):
         var_name = ctx.ID(1).getText()
-        condition = self.visit(ctx.expression()) if ctx.expression() else "True"
-        head = f"while not ({condition}):" if ctx.TIL() else f"while {condition}:"
+        if ctx.expression():
+            condition = self.visit(ctx.expression())
+
+            if ctx.TIL():
+                head = f"while not {condition}:"
+
+            elif ctx.WILE():
+                head = f"while {condition}:"
+
+            else:
+                head = "while True:"
+        else:
+            head = "while True:"
+
+        start = ctx.ID(0).getText()
+        end = ctx.ID(2).getText()
+
+        if start != end:
+            raise Exception(f"Błędna składnia - {start} nie równa się {end}")
         
         res = [head]
         self.indent_level += 1
-        res.append(self.visit(ctx.body()))
+        body = self.visit(ctx.body())
+        res.append(self.ensure_body(body))
         op = "+= 1" if ctx.UPPIN() else "-= 1"
         res.append(f"{self.get_indent()}{var_name} {op}")
         self.indent_level -= 1
@@ -184,13 +213,15 @@ class Lolcode2Python(LolcodeVisitor):
             val = self.visit(ctx.expression(i+1))
             res.append(f"{self.get_indent()}case {val}:")
             self.indent_level += 1
-            res.append(self.visit(ctx.body(i)))
+            body = self.visit(ctx.body(i))
+            res.append(self.ensure_body(body))
             self.indent_level -= 1
             
         if ctx.OMGWTF():
             res.append(f"{self.get_indent()}case _:")
             self.indent_level += 1
-            res.append(self.visit(ctx.body(len(ctx.body())-1)))
+            body = self.visit(ctx.body(len(ctx.body())-1))
+            res.append(self.ensure_body(body))
             self.indent_level -= 1
         self.indent_level -= 1
         return "\n".join(res)
@@ -202,7 +233,8 @@ class Lolcode2Python(LolcodeVisitor):
         
         res = [f"def {name}({arg_str}):"]
         self.indent_level += 1
-        res.append(self.visit(ctx.body()))
+        body = self.visit(ctx.body())
+        res.append(self.ensure_body(body))
         self.indent_level -= 1
         return "\n".join(res)
 
