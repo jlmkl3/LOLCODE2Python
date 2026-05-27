@@ -138,6 +138,9 @@ STRING: '"' .*? '"';
 
 //Komentarze i białe znaki
 COMMENT: 'BTW' ~[\r\n]* -> channel(HIDDEN);
-BLOCK_COMMENT: 'OBTW' .*? 'TLDR' -> channel(HIDDEN);
+BLOCK_COMMENT
+    : 'OBTW' ( . | '\r' | '\n' )*? 'TLDR'
+      -> channel(HIDDEN)
+    ;
 NL: '\r'? '\n';
 WS: [ \t]+ -> skip;

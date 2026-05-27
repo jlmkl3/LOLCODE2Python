@@ -1,4 +1,5 @@
 from generated.LolcodeVisitor import LolcodeVisitor
+from antlr4.Token import Token
 from generated.LolcodeParser import LolcodeParser
 
 class Lolcode2Python(LolcodeVisitor):
@@ -26,7 +27,10 @@ class Lolcode2Python(LolcodeVisitor):
         
         all_tokens = tokeny.getTokens(start_idx, stop_idx)
         for st in ctx.statement():
-            hidden = tokeny.getHiddenTokensToLeft(st.start.tokenIndex, -1)
+            hidden = tokeny.getHiddenTokensToLeft(
+                st.start.tokenIndex,
+                Token.HIDDEN_CHANNEL
+            )
             if hidden:
                 for h in hidden:
                     c_text = h.text.strip()
