@@ -137,7 +137,7 @@ ID: [a-zA-Z][a-zA-Z0-9_]*;
 STRING: '"' .*? '"';
 
 //Komentarze i białe znaki
-COMMENT: 'BTW' ~[\r\n]* -> skip;
-BLOCK_COMMENT: 'OBTW' .*? 'TLDR' -> skip;
+COMMENT: 'BTW' ~[\r\n]* -> channel(HIDDEN);
+BLOCK_COMMENT: 'OBTW' .*? 'TLDR' -> channel(HIDDEN);
 NL: '\r'? '\n';
 WS: [ \t]+ -> skip;
