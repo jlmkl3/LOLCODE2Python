@@ -1,0 +1,17 @@
+# ANTLR Generated files
+generated/
+!generated/__init__.py
+.antlr/
+*.tokens
+*.interp
+
+# Java Tools
+*.jar
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS
+.DS_Store
