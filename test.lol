@@ -10,7 +10,7 @@ TLDR
 HOW IZ I funkcja AN liczba
     I HAS A wynik ITZ SUM OF liczba AN 10
     FOUND YR wynik
-IF_U_SAY_SO
+IF U SAY SO
 
 I HAS A kod ITZ WIN 
 I HAS A licznik ITZ 0
@@ -45,6 +45,6 @@ IM IN YR petla UPPIN YR licznik WILE DIFFRINT licznik AN 5
     VISIBLE test_funkcji
 IM OUTTA YR petla
 
-VISIBLE ALL_OF BOTH_SAEM licznik AN 5 AN WIN AN NOT FAIL MKAY
+VISIBLE ALL OF BOTH SAEM licznik AN 5 AN WIN AN NOT FAIL MKAY
 
 KTHXBYE
