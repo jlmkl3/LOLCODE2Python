@@ -222,3 +222,7 @@ BLOCK_COMMENT: 'OBTW' .*? 'TLDR' -> skip;
 NL: '\r'? '\n';
 WS: [ \t]+ -> skip;
 ```
+
+##Instrukcja obsługi
+
+##Przykład uzycia
