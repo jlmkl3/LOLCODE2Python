@@ -74,6 +74,8 @@ binary_op: (
 		| WON_OF
 		| BOTH_SAEM
 		| DIFFRINT
+		| COMMENT
+    	| BLOCK_COMMENT
 	) expression AN expression;
 
 //Operatory jednoargumentowe
@@ -137,10 +139,9 @@ ID: [a-zA-Z][a-zA-Z0-9_]*;
 STRING: '"' .*? '"';
 
 //Komentarze i białe znaki
-COMMENT: 'BTW' ~[\r\n]* -> channel(HIDDEN);
+COMMENT: 'BTW' ~[\r\n]* NL;
 BLOCK_COMMENT
-    : 'OBTW' ( . | '\r' | '\n' )*? 'TLDR'
-      -> channel(HIDDEN)
-    ;
+    : 'OBTW' ( ~'T' | 'T' ~'L' | 'TL' ~'D' | 'TLD' ~'R' )* 'TLDR' NL?
+;
 NL: '\r'? '\n';
 WS: [ \t]+ -> skip;

@@ -3,9 +3,8 @@ from antlr4.Token import Token
 from generated.LolcodeParser import LolcodeParser
 
 class Lolcode2Python(LolcodeVisitor):
-    def __init__(self, tokeny=None):
+    def __init__(self):
         super().__init__()
-        self.tokeny = tokeny
         self.indent_level = 0
 
     def get_indent(self):
@@ -18,46 +17,25 @@ class Lolcode2Python(LolcodeVisitor):
     
     def visitBody(self, ctx: LolcodeParser.BodyContext):
         lines = []
-        tokeny = self.tokeny
-        if not tokeny:
-            return ""
 
-        start_idx = ctx.start.tokenIndex
-        stop_idx = ctx.stop.tokenIndex
-        
-        all_tokens = tokeny.getTokens(start_idx, stop_idx)
         for st in ctx.statement():
-            hidden = tokeny.getHiddenTokensToLeft(
-                st.start.tokenIndex,
-                Token.HIDDEN_CHANNEL
-            )
-            if hidden:
-                for h in hidden:
-                    c_text = h.text.strip()
-                    if c_text.startswith("BTW"):
-                        lines.append(f"{self.get_indent()}# {c_text[3:].strip()}")
-                    elif c_text.startswith("OBTW"):
-                        inner = c_text.replace("OBTW", "").replace("TLDR", "").strip()
-                        for l in inner.split('\n'):
-                            lines.append(f"{self.get_indent()}# {l.strip()}")
-
-   
             code = self.visit(st)
+
             if code:
                 for fragment in str(code).split('\n'):
+
                     if fragment.strip():
+
                         if fragment.startswith("    "):
                             lines.append(fragment)
+
                         else:
-                            lines.append(f"{self.get_indent()}{fragment}")
+                            lines.append(
+                                f"{self.get_indent()}{fragment}"
+                            )
+
                     else:
                         lines.append("")
-        
-        last_hidden = tokeny.getHiddenTokensToRight(ctx.stop.tokenIndex, -1)
-        if last_hidden:
-            for h in last_hidden:
-                if h.text.strip().startswith("BTW"):
-                    lines.append(f"{self.get_indent()}# {h.text.strip()[3:].strip()}")
 
         return "\n".join(lines)
     
@@ -71,6 +49,19 @@ class Lolcode2Python(LolcodeVisitor):
                     return "pass  # GTFO"
                 parent = parent.parentCtx
             return "pass"
+        text = ctx.getText()
+
+        if text.startswith("BTW"):
+            return f"# {text[3:].strip()}"
+
+        if text.startswith("OBTW"):
+            inner = text[len("OBTW"):-len("TLDR")].strip()
+
+            return "\n".join(
+                f"# {line.strip()}"
+                for line in inner.splitlines()
+            )
+
         return self.visitChildren(ctx)
     
     def visitExpression(self, ctx: LolcodeParser.ExpressionContext):

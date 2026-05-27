@@ -19,7 +19,7 @@ def main():
 
     tree=parser.program()
 
-    kod_python=Lolcode2Python(tokeny).visit(tree)
+    kod_python=Lolcode2Python().visit(tree)
 
     with open("kod_python.py","w", encoding="utf-8") as f:
         f.write(kod_python)
