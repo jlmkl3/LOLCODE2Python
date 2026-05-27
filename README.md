@@ -223,6 +223,6 @@ NL: '\r'? '\n';
 WS: [ \t]+ -> skip;
 ```
 
-##Instrukcja obsługi
+## Instrukcja obsługi
 
-##Przykład uzycia
+## Przykład uzycia
