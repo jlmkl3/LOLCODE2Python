@@ -246,3 +246,7 @@ pip install antlr4-python3-runtime==4.13.2
 antlr4 -Dlanguage=Python3 -visitor -o generated/ Lolcode.g4
 python main.py test.lol
 ```
+jeśli komenda antlr4 nie działa, pobieramy paczkę https://www.antlr.org/download/antlr-4.13.2-complete.jar, i w terminalu wpisujemy:
+```
+java -jar antlr-4.13.2-complete.jar -Dlanguage=Python3 -visitor -package generated Lolcode.g4 -o generated
+```
