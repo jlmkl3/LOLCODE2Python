@@ -1,5 +1,4 @@
-HAI 1.2
-CAN HAS STDIO?
+HAI 1.2 CAN HAS STDIO?
 
 BTW powinien byc widoczny komentarz
 
@@ -22,14 +21,14 @@ GIMMEH licznik
 VISIBLE text
 VISIBLE SUM OF 5 AN PRODUKT OF 4 AN 3
 
-O RLY?
+WIN O RLY?
     YA RLY
         VISIBLE "Warunek spelniony"
     NO WAI
         VISIBLE "Cos nie tak"
 OIC 
 
-WTF?
+licznik WTF?
     OMG 1
         VISIBLE "Jedynka"
         GTFO

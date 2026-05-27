@@ -43,7 +43,7 @@ loop_stmt:
 	IM_IN_YR ID (UPPIN | NERFIN) YR ID ((TIL | WILE)? expression)? NL body IM_OUTTA_YR ID;
 
 //Funkcje
-func_decl: HOW_IZ_I ID (AN ID)* body IF_U_SAY_SO;
+func_decl: HOW_IZ_I ID (AN ID)* NL body IF_U_SAY_SO;
 func_call: I_IZ ID (AN expression)* MKAY;
 return_stmt: FOUND_YR expression;
 

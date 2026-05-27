@@ -1,9 +1,11 @@
 from generated.LolcodeVisitor import LolcodeVisitor
-from generated.LolcodeVisitor import LolcodeParser
+from generated.LolcodeParser import LolcodeParser
 
 class Lolcode2Python(LolcodeVisitor):
     indent_level: int 
-    def __init__(self):
+    def __init__(self, token_stream=None):
+        super().__init__()
+        self.token_stream = token_stream
         self.indent_level = 0
 
     def get_indent(self):
@@ -19,13 +21,12 @@ class Lolcode2Python(LolcodeVisitor):
         for st in ctx.statement():
             code = self.visit(st)
             if code:
-                line = self.get_indent() + str(code)
-                lines.append(line)
+                lines.append(str(code))
         return "\n".join(lines)
     
     def visitStatement(self, ctx: LolcodeParser.StatementContext):
         if ctx.GTFO():
-            return "break"
+            return "{self.get_indent()}break"
         return self.visitChildren(ctx)
     
     def visitExpression(self, ctx: LolcodeParser.ExpressionContext):
@@ -46,24 +47,24 @@ class Lolcode2Python(LolcodeVisitor):
     #instrukcje podstawowe
     def visitPrint_stmt(self, ctx:LolcodeParser.Print_stmtContext):
         code = self.visit(ctx.expression())
-        txt = f"print({code})"
+        txt = f"{self.get_indent()}print({code})"
         return txt
     
     def visitVar_decl(self, ctx:LolcodeParser.Var_declContext):
         name = ctx.ID().getText()
         if ctx.ITZ():
             value = self.visit(ctx.expression())
-            return f"{name} = {value}"
-        return f"{name} = None"
+            return f"{self.get_indent()}{name} = {value}"
+        return f"{self.get_indent()}{name} = None"
     
     def visitAssign_stmt(self, ctx:LolcodeParser.Assign_stmtContext):
         name = ctx.ID().getText()
         value = self.visit(ctx.expression())
-        return f"{name} = {value}"
+        return f"{self.get_indent()}{name} = {value}"
     
     def visitInput_stmt(self, ctx:LolcodeParser.Input_stmtContext):
         name = ctx.ID().getText()
-        txt = f"{name} = input()"
+        txt = f"{self.get_indent()}{name} = input()"
         return txt
     
     #Instrukcja warunkowa
@@ -149,12 +150,13 @@ class Lolcode2Python(LolcodeVisitor):
         name = ctx.ID(0).getText()
         args = [ctx.ID(i).getText() for i in range(1, len(ctx.ID()))]
         arg_str = ", ".join(args)
+
+        func_header = f"{self.get_indent()}def {name}({arg_str}):"
         
-        lines = [f"def {name}({arg_str}):"]
         self.indent_level += 1
-        lines.append(self.visit(ctx.body()))
+        body_code=self.visit(ctx.body())
         self.indent_level -= 1
-        return "\n".join(lines)
+        return f"{func_header}\n{body_code}"
 
     def visitFunc_call(self, ctx: LolcodeParser.Func_callContext):
         name = ctx.ID().getText()
@@ -163,7 +165,7 @@ class Lolcode2Python(LolcodeVisitor):
 
     def visitReturn_stmt(self, ctx: LolcodeParser.Return_stmtContext):
         val = self.visit(ctx.expression())
-        return f"return {val}"
+        return f"{self.get_indent()}return {val}"
     
     def visitMulti_op(self, ctx: LolcodeParser.Multi_opContext):
         args = [self.visit(exp) for exp in ctx.expression()]
