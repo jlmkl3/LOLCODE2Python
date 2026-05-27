@@ -224,5 +224,25 @@ WS: [ \t]+ -> skip;
 ```
 
 ## Instrukcja obsługi
+### 1. Instalacja zależności:
+Do poprawnego działania wymagane jest środowisko Python oraz biblioteka uruchomieniowa ANTLR:
+```bash
+pip install antlr4-python3-runtime==4.13.2
+```
 
-## Przykład uzycia
+### 2. Generowanie parsera (umożliwia zmianę gramatyki z każdym uruchomieniem)
+```bash
+antlr4 -Dlanguage=Python3 -visitor -o generated/ Lolcode.g4
+```
+### 3. Uruchomienie transpilacji
+```bash
+python main.py <nazwa_pliku>.lol
+```
+wynik pojawi się w "kod_python.py"
+
+## Przykład użycia
+```bash
+pip install antlr4-python3-runtime==4.13.2
+antlr4 -Dlanguage=Python3 -visitor -o generated/ Lolcode.g4
+python main.py test.lol
+```
