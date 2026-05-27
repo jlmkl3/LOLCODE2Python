@@ -1,10 +1,15 @@
-HAI 1.2 CAN HAS STDIO? CAN HAS MATH?
+HAI 1.2
+CAN HAS STDIO?
+CAN HAS MATH?
 
-BTW powinien byc widoczny komentarz
+BTW To jest zwykły komentarz jednolinijkowy
 
-OBTW 
-    powinien byc blokowy komentarz
-    i sie pokazywac
+I HAS A kod ITZ WIN 
+
+OBTW
+    To jest komentarz blokowy.
+    Powinien zachować swoje linie,
+    a w Pythonie stać się serią komentarzy ze znakiem #.
 TLDR
 
 HOW IZ I funkcja AN liczba
@@ -12,39 +17,31 @@ HOW IZ I funkcja AN liczba
     FOUND YR wynik
 IF U SAY SO
 
-I HAS A kod ITZ WIN 
 I HAS A licznik ITZ 0
-I HAS A text ITZ "Testowanie"
+I HAS A text ITZ "Testowanie zagniezdzen"
 
 GIMMEH licznik
 
 VISIBLE text
-VISIBLE SUM OF 5 AN PRODUKT OF 4 AN 3
 
-WIN O RLY?
+kod O RLY?
     YA RLY
-        VISIBLE "Warunek spelniony"
+        VISIBLE "Pierwszy poziom (If)"
+        
+        IM IN YR petla UPPIN YR licznik WILE DIFFRINT licznik AN 3
+            VISIBLE "Drugi poziom (Petla wewnatrz If):"
+            VISIBLE licznik
+            
+            licznik WTF?
+                OMG 1
+                    VISIBLE "  Trzeci poziom: Jeden!"
+                    GTFO
+                OMGWTF
+                    VISIBLE "  Trzeci poziom: Cos innego!"
+            OIC
+        IM OUTTA YR petla
     NO WAI
         VISIBLE "Cos nie tak"
 OIC 
-
-licznik WTF?
-    OMG 1
-        VISIBLE "Jedynka"
-        GTFO
-    OMG 2
-        VISIBLE "Dwojka"
-        GTFO
-    OMGWTF
-        VISIBLE "Cos innego"
-OIC
-
-IM IN YR petla UPPIN YR licznik WILE DIFFRINT licznik AN 5
-    VISIBLE licznik
-    I HAS A test_funkcji ITZ I IZ funkcja AN licznik MKAY
-    VISIBLE test_funkcji
-IM OUTTA YR petla
-
-VISIBLE ALL OF BOTH SAEM licznik AN 5 AN WIN AN NOT FAIL MKAY
 
 KTHXBYE

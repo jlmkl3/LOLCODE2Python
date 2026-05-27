@@ -6,7 +6,7 @@ import sys
 
 def main():
     if len(sys.argv)<2:
-        print("Przy wywoływaniu programu dodaj nazwe pliku wejściowego!")
+        print("Przy wywoływaniu programu dodaj nazwę pliku wejściowego!")
         sys.exit()
 
     file_path=sys.argv[1]

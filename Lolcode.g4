@@ -1,11 +1,11 @@
 grammar Lolcode;
 
 //Parser
-program: HAI version? includes? NL body KTHXBYE;
+program: HAI version? NL? includes? body KTHXBYE;
+
+includes: (CANHAS LIBRARY_NAME '?' NL?)+;
 
 version: NUMBER;
-
-includes: (CANHAS LIBRARY_NAME '?')+;
 
 body: (statement | comment | NL)*;
 

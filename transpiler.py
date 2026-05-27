@@ -43,23 +43,22 @@ class Lolcode2Python(LolcodeVisitor):
     
     def visitBody(self, ctx: LolcodeParser.BodyContext):
         lines = []
+        
+        if not ctx or not ctx.children:
+            return ""
 
         for st in ctx.children:
             code = self.visit(st)
 
             if code:
                 for fragment in str(code).split('\n'):
-
-                    if fragment.strip():
-
-                        if fragment.startswith("    "):
-                            lines.append(fragment)
-
+                    fragment_stripped = fragment.rstrip()
+                    
+                    if fragment_stripped:
+                        if fragment_stripped.startswith("    " * self.indent_level):
+                            lines.append(fragment_stripped)
                         else:
-                            lines.append(
-                                f"{self.get_indent()}{fragment}"
-                            )
-
+                            lines.append(f"{self.get_indent()}{fragment_stripped}")
                     else:
                         lines.append("")
 
@@ -78,11 +77,18 @@ class Lolcode2Python(LolcodeVisitor):
             return f"# {content}"
     
         if text.startswith("OBTW"):
-            #usuniecie OBTW i TLDR
             inner = text[4:-4].strip()
             lines = inner.splitlines()
-            return "\n".join(f"# {line.strip()}" for line in lines)
-        
+            
+            processed_lines = []
+            for line in lines:
+                if line.strip():
+                    processed_lines.append(f"# {line.strip()}")
+                else:
+                    processed_lines.append("#")
+            
+            return "\n".join(processed_lines)
+            
         return ""
     
     def visitStatement(self, ctx: LolcodeParser.StatementContext):
@@ -129,9 +135,11 @@ class Lolcode2Python(LolcodeVisitor):
         value = self.visit(ctx.expression())
         return f"{name} = {value}"
     
-    def visitInput_stmt(self, ctx:LolcodeParser.Input_stmtContext):
+    def visitInput_stmt(self, ctx: LolcodeParser.Input_stmtContext):
         name = ctx.ID().getText()
-        return f"{name} = input(); {name} = int({name}) if {name}.isnumeric() else {name}"
+        line1 = f"{name} = input()"
+        line2 = f"{self.get_indent()}{name} = int({name}) if {name}.isnumeric() else {name}"
+        return f"{line1}\n{line2}"
     
     #Instrukcja warunkowa
     def visitIf_stmt(self, ctx: LolcodeParser.If_stmtContext):
