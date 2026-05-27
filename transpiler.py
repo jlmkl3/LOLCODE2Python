@@ -1,5 +1,4 @@
 from generated.LolcodeVisitor import LolcodeVisitor
-from antlr4.Token import Token
 from generated.LolcodeParser import LolcodeParser
 
 class Lolcode2Python(LolcodeVisitor):
@@ -10,15 +9,42 @@ class Lolcode2Python(LolcodeVisitor):
     def get_indent(self):
         return "    " * self.indent_level
     
+    def visitVersion(self, ctx:LolcodeParser.VersionContext):
+        return f"# LOLCODE version {ctx.NUMBER().getText()}"
+    
+    def visitIncludes(self, ctx:LolcodeParser.IncludesContext):
+        library_map = {
+            "STDIO": "import sys",
+            "MATH": "import math",
+            "RANDOM": "import random",
+            "TIME": "import time",
+            "OS": "import os"
+        }
+        imports = []
+
+        for lib_token in ctx.LIBRARY_NAME():
+            lib = lib_token.getText()
+            imports.append(
+                library_map.get(lib, f"# unknown library {lib}")
+            )
+
+        return "\n".join(imports)
+
+    
     def visitProgram(self, ctx: LolcodeParser.ProgramContext):
-        header = "it = None\n"
-        body_code = self.visit(ctx.body())
-        return header + body_code
+        lines = []
+        if ctx.version():
+            lines.append(self.visit(ctx.version()))
+        if ctx.includes():
+            lines.append(self.visit(ctx.includes()))
+        lines.append("it = None\n")
+        lines.append(self.visit(ctx.body()))
+        return "\n".join(lines)
     
     def visitBody(self, ctx: LolcodeParser.BodyContext):
         lines = []
 
-        for st in ctx.statement():
+        for st in ctx.children:
             code = self.visit(st)
 
             if code:
@@ -39,6 +65,21 @@ class Lolcode2Python(LolcodeVisitor):
 
         return "\n".join(lines)
     
+    def visitComment(self, ctx: LolcodeParser.CommentContext):
+        text = ctx.getText()
+        
+        if text.startswith("BTW"):
+            content = text[3:].strip()
+            return f"# {content}"
+    
+        if text.startswith("OBTW"):
+            #usuniecie OBTW i TLDR
+            inner = text[4:-4].strip()
+            lines = inner.splitlines()
+            return "\n".join(f"# {line.strip()}" for line in lines)
+        
+        return ""
+    
     def visitStatement(self, ctx: LolcodeParser.StatementContext):
         if ctx.GTFO():
             parent = ctx.parentCtx
@@ -49,18 +90,6 @@ class Lolcode2Python(LolcodeVisitor):
                     return "pass  # GTFO"
                 parent = parent.parentCtx
             return "pass"
-        text = ctx.getText()
-
-        if text.startswith("BTW"):
-            return f"# {text[3:].strip()}"
-
-        if text.startswith("OBTW"):
-            inner = text[len("OBTW"):-len("TLDR")].strip()
-
-            return "\n".join(
-                f"# {line.strip()}"
-                for line in inner.splitlines()
-            )
 
         return self.visitChildren(ctx)
     
@@ -135,7 +164,7 @@ class Lolcode2Python(LolcodeVisitor):
     
     def visitLoop_stmt(self, ctx: LolcodeParser.Loop_stmtContext):
         var_name = ctx.ID(1).getText()
-        condition = self.visit(ctx.expression())
+        condition = self.visit(ctx.expression()) if ctx.expression() else "True"
         head = f"while not ({condition}):" if ctx.TIL() else f"while {condition}:"
         
         res = [head]

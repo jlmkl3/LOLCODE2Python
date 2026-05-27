@@ -1,4 +1,4 @@
-HAI 1.2 CAN HAS STDIO?
+HAI 1.2 CAN HAS STDIO? CAN HAS MATH?
 
 BTW powinien byc widoczny komentarz
 

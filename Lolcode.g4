@@ -5,10 +5,11 @@ program: HAI version? includes? NL body KTHXBYE;
 
 version: NUMBER;
 
-includes: CANHAS LIBRARY_NAME '?';
+includes: (CANHAS LIBRARY_NAME '?')+;
 
-body: (statement | NL)*;
+body: (statement | comment | NL)*;
 
+comment: COMMENT | BLOCK_COMMENT;
 statement:
 	print_stmt
 	| var_decl
@@ -74,8 +75,6 @@ binary_op: (
 		| WON_OF
 		| BOTH_SAEM
 		| DIFFRINT
-		| COMMENT
-    	| BLOCK_COMMENT
 	) expression AN expression;
 
 //Operatory jednoargumentowe
@@ -139,9 +138,7 @@ ID: [a-zA-Z][a-zA-Z0-9_]*;
 STRING: '"' .*? '"';
 
 //Komentarze i białe znaki
-COMMENT: 'BTW' ~[\r\n]* NL;
-BLOCK_COMMENT
-    : 'OBTW' ( ~'T' | 'T' ~'L' | 'TL' ~'D' | 'TLD' ~'R' )* 'TLDR' NL?
-;
+COMMENT: 'BTW' ~[\r\n]*; 
+BLOCK_COMMENT: 'OBTW' (.|[\r\n])*? 'TLDR';
 NL: '\r'? '\n';
 WS: [ \t]+ -> skip;

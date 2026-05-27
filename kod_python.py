@@ -1,8 +1,11 @@
+# LOLCODE version 1.2
+import sys
+import math
 it = None
+
 # powinien byc widoczny komentarz
 # powinien byc blokowy komentarz
 # i sie pokazywac
-# TL
 def funkcja(liczba):
     wynik = (liczba + 10)
     return wynik
