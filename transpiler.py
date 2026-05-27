@@ -151,7 +151,7 @@ class Lolcode2Python(LolcodeVisitor):
         self.indent_level += 1
         res.append(self.visit(ctx.body()))
         op = "+= 1" if ctx.UPPIN() else "-= 1"
-        res.append(f"{var_name} {op}")
+        res.append(f"{self.get_indent()}{var_name} {op}")
         self.indent_level -= 1
         return "\n".join(res)
     

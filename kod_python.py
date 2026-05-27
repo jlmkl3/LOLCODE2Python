@@ -26,5 +26,5 @@ while (licznik != 5):
     print(licznik)
     test_funkcji = funkcja(licznik)
     print(test_funkcji)
-licznik += 1
+    licznik += 1
 print(all([(licznik == 5), True, (not False)]))
