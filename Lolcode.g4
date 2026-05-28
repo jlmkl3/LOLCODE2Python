@@ -11,7 +11,8 @@ body: (statement | comment | NL)*;
 
 comment: COMMENT | BLOCK_COMMENT;
 statement:
-	print_stmt
+	expression
+	| print_stmt
 	| var_decl
 	| assign_stmt
 	| input_stmt

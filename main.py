@@ -1,4 +1,5 @@
 from antlr4 import *
+from LolcodeErrorListener import LolcodeErrorListener
 from generated.LolcodeLexer import LolcodeLexer
 from generated.LolcodeParser import LolcodeParser
 from transpiler import Lolcode2Python
@@ -16,6 +17,8 @@ def main():
     lekser=LolcodeLexer(strumien)
     tokeny=CommonTokenStream(lekser)
     parser=LolcodeParser(tokeny)
+    parser.removeErrorListeners()
+    parser.addErrorListener(LolcodeErrorListener())
 
     tree=parser.program()
 

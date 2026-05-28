@@ -8,6 +8,7 @@ kod = True
 # To jest komentarz blokowy.
 # Powinien zachować swoje linie,
 # a w Pythonie stać się serią komentarzy ze znakiem #.
+it = (1 + 10)
 def funkcja(liczba):
     wynik = (liczba + 10)
     return wynik

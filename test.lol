@@ -12,6 +12,8 @@ OBTW
     a w Pythonie stać się serią komentarzy ze znakiem #.
 TLDR
 
+SUM OF 1 AN 10
+
 HOW IZ I funkcja AN liczba
     I HAS A wynik ITZ SUM OF liczba AN 10
     FOUND YR wynik

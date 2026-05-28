@@ -43,25 +43,24 @@ class Lolcode2Python(LolcodeVisitor):
     
     def visitBody(self, ctx: LolcodeParser.BodyContext):
         lines = []
-        
         if not ctx or not ctx.children:
             return ""
 
         for st in ctx.children:
+            if isinstance(st, LolcodeParser.StatementContext):
+                if st.expression():
+                    expr_code = self.visit(st.expression())
+                    lines.append(f"{self.get_indent()}it = {expr_code}")
+                    continue
             code = self.visit(st)
-
             if code:
                 for fragment in str(code).split('\n'):
-                    fragment_stripped = fragment.rstrip()
-                    
-                    if fragment_stripped:
-                        if fragment_stripped.startswith("    " * self.indent_level):
-                            lines.append(fragment_stripped)
+                    line_content = fragment.rstrip()
+                    if line_content:
+                        if not line_content.startswith("    "):
+                            lines.append(f"{self.get_indent()}{line_content}")
                         else:
-                            lines.append(f"{self.get_indent()}{fragment_stripped}")
-                    else:
-                        lines.append("")
-
+                            lines.append(line_content)
         return "\n".join(lines)
     
     def ensure_body(self, body_code):
@@ -143,7 +142,10 @@ class Lolcode2Python(LolcodeVisitor):
     
     #Instrukcja warunkowa
     def visitIf_stmt(self, ctx: LolcodeParser.If_stmtContext):
-        condition = self.visit(ctx.expression())
+        if ctx.expression():
+            condition = self.visit(ctx.expression())
+        else: 
+            condition = "it"
         res = [f"if {condition}:"]
         
         self.indent_level += 1
