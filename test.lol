@@ -17,7 +17,7 @@ HOW IZ I funkcja AN liczba
     FOUND YR wynik
 IF U SAY SO
 
-I HAS A licznik ITZ 0
+I HAS A licznik ITZ -1.0
 I HAS A text ITZ "Testowanie zagniezdzen"
 
 GIMMEH licznik

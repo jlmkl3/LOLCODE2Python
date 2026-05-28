@@ -11,7 +11,7 @@ kod = True
 def funkcja(liczba):
     wynik = (liczba + 10)
     return wynik
-licznik = 0
+licznik = -1.0
 text = "Testowanie zagniezdzen"
 licznik = input()
 licznik = int(licznik) if licznik.isnumeric() else licznik

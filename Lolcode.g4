@@ -133,7 +133,7 @@ FAIL: 'FAIL';
 //Dodatkowe
 CANHAS: 'CAN HAS';
 LIBRARY_NAME: [A-Z]+;
-NUMBER: [0-9]+ ('.' [0-9]+)?;
+NUMBER: '-'? [0-9]+ ('.' [0-9]+)?;
 ID: [a-zA-Z][a-zA-Z0-9_]*;
 STRING: '"' .*? '"';
 
