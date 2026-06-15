@@ -13,6 +13,7 @@ OBTW
 TLDR
 
 SUM OF 1 AN 10
+VISIBLE it
 
 HOW IZ I funkcja AN liczba
     I HAS A wynik ITZ SUM OF liczba AN 10

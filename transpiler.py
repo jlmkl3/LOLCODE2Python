@@ -5,6 +5,13 @@ class Lolcode2Python(LolcodeVisitor):
     def __init__(self):
         super().__init__()
         self.indent_level = 0
+        self.errors = []
+        self.variables = set()
+        self.functions = set()
+    
+    def addError(self, ctx, msg):
+        line = ctx.start.line
+        self.errors.append(f"[Error] Linia {line}: {msg}")
 
     def get_indent(self):
         return "    " * self.indent_level
@@ -106,7 +113,11 @@ class Lolcode2Python(LolcodeVisitor):
     def visitExpression(self, ctx: LolcodeParser.ExpressionContext):
         if ctx.NUMBER(): return ctx.NUMBER().getText()
         if ctx.STRING(): return ctx.STRING().getText()
-        if ctx.ID(): return ctx.ID().getText()
+        if ctx.ID(): 
+            name = ctx.ID().getText()
+            if name not in self.variables:
+                self.addError(ctx, f"Uzycie niezadeklarowanej zmiennej {name}")
+            return name
         if ctx.binary_op(): return self.visit(ctx.binary_op())
         if ctx.getText() == "WIN": return "True"
         if ctx.getText() == "FAIL": return "False"
@@ -124,6 +135,10 @@ class Lolcode2Python(LolcodeVisitor):
     
     def visitVar_decl(self, ctx:LolcodeParser.Var_declContext):
         name = ctx.ID().getText()
+        if name in self.variables:
+            self.addError(ctx, f"Zmienna {name} została wcześniej zadeklarowana")
+        else:
+            self.variables.add(name)
         if ctx.ITZ():
             value = self.visit(ctx.expression())
             return f"{name} = {value}"
@@ -131,11 +146,15 @@ class Lolcode2Python(LolcodeVisitor):
     
     def visitAssign_stmt(self, ctx:LolcodeParser.Assign_stmtContext):
         name = ctx.ID().getText()
+        if name not in self.variables:
+            self.addError(ctx, f"Próba przypisania wartości do zmiennej {name}, która nie została wcześniej zadeklarowana")
         value = self.visit(ctx.expression())
         return f"{name} = {value}"
     
     def visitInput_stmt(self, ctx: LolcodeParser.Input_stmtContext):
         name = ctx.ID().getText()
+        if name not in self.variables:
+            self.addError(ctx, f"Próba wczytania danych do niezadeklarowanej zmiennej {name}")
         line1 = f"{name} = input()"
         line2 = f"{self.get_indent()}{name} = int({name}) if {name}.isnumeric() else {name}"
         return f"{line1}\n{line2}"
@@ -203,7 +222,7 @@ class Lolcode2Python(LolcodeVisitor):
         end = ctx.ID(2).getText()
 
         if start != end:
-            raise Exception(f"Błędna składnia - {start} nie równa się {end}")
+            self.addError(ctx, f"Niezgodność etykiet pętli: {start} nie równa się {end}")
         
         res = [head]
         self.indent_level += 1
@@ -238,7 +257,13 @@ class Lolcode2Python(LolcodeVisitor):
     
     def visitFunc_decl(self, ctx: LolcodeParser.Func_declContext):
         name = ctx.ID(0).getText()
+        if name in self.functions:
+            self.addError(ctx, f"Funkcja o nazwie {name} juz istnieje")
+        else:
+            self.functions.add(name)
         args = [ctx.ID(i).getText() for i in range(1, len(ctx.ID()))]
+        for arg in args:
+            self.variables.add(arg)
         arg_str = ", ".join(args)
         
         res = [f"def {name}({arg_str}):"]
@@ -250,6 +275,8 @@ class Lolcode2Python(LolcodeVisitor):
 
     def visitFunc_call(self, ctx: LolcodeParser.Func_callContext):
         name = ctx.ID().getText()
+        if name not in self.functions:
+            self.addError(ctx, f"Wywołanie niezdefiniowanej funckji {name}")
         args = [self.visit(exp) for exp in ctx.expression()]
         return f"{name}({', '.join(args)})"
 

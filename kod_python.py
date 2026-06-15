@@ -9,6 +9,7 @@ kod = True
 # Powinien zachować swoje linie,
 # a w Pythonie stać się serią komentarzy ze znakiem #.
 it = (1 + 10)
+print(it)
 def funkcja(liczba):
     wynik = (liczba + 10)
     return wynik
