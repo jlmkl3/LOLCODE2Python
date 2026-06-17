@@ -17,6 +17,9 @@ Kod w Python
 ### Planowany język implementacji:
 Python
 
+### Generator parsera
+ANTLR4
+
 # Tabela tokenów
 | Nazwa tokenu   | Regex        | Opis |
 |----------------|-------------|------|
