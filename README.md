@@ -243,13 +243,46 @@ python main.py <nazwa_pliku>.lol
 ```
 wynik pojawi się w "kod_python.py"
 
-## Przykład użycia
-```bash
-pip install antlr4-python3-runtime==4.13.2
-antlr4 -Dlanguage=Python3 -visitor -o generated/ Lolcode.g4
-python main.py test.lol
-```
 jeśli komenda antlr4 nie działa, pobieramy paczkę https://www.antlr.org/download/antlr-4.13.2-complete.jar, i w terminalu wpisujemy:
 ```
 java -jar antlr-4.13.2-complete.jar -Dlanguage=Python3 -visitor -package generated Lolcode.g4 -o generated
+```
+
+## Przykład użycia
+Transpiler pozwala na łatwe tłumaczenie kodu źródłowego zapisanego w języku LOLCODE na gotowe skrypty Python.
+
+### 1. Przygotowanie pliku źródłowego
+Tworzymy plik tekstowy z rozszerzeniem `.lol` (np. `program.lol`) i umieszczamy w nim swój kod LOLCODE:
+
+```lolcode
+HAI 1.2
+    CAN HAS STDIO?
+    I HAS A wiadomosc ITZ "Udało się odpalić transpiler!"
+    VISIBLE wiadomosc
+KTHXBYE
+```
+
+Aby przetłumaczyć plik na język Python, uruchamiamy skrypt main.py w terminalu, podając ścieżkę do pliku wejściowego jako argument:
+```bash
+python main.py program.lol
+```
+
+#### Wynik działania
+Jeśli kod źródłowy jest poprawny, program automatycznie wygeneruje plik z rozszerzeniem .py w tym samym katalogu (program.py):
+```python
+# LOLCODE version 1.2
+import sys
+
+it = None
+wiadomosc = "Udało się odpalić transpiler!"
+print(wiadomosc)
+```
+
+Nasz transpiler posiada wbudowany analizator semantyczny. W przypadku wykrycia błędów w logice programu (np. użycie niezadeklarowanej zmiennej), proces zapisu kodu zostanie przerwany, a w konsoli wyświetlony zostanie czytelny raport:
+```
+[BŁĄD] Wykryto błędy semantyczne w pliku test.lol:
+[Error] Linia 4: Uzycie niezadeklarowanej zmiennej ukryta_zmienna
+[Error] Linia 7: Niezgodność etykiet pętli: moja_petla nie równa się zla_nazwa
+
+Wygenerowano pusty plik: 'test.py'
 ```
