@@ -276,7 +276,7 @@ class Lolcode2Python(LolcodeVisitor):
     def visitFunc_call(self, ctx: LolcodeParser.Func_callContext):
         name = ctx.ID().getText()
         if name not in self.functions:
-            self.addError(ctx, f"Wywołanie niezdefiniowanej funckji {name}")
+            self.addError(ctx, f"Wywołanie niezdefiniowanej funkcji {name}")
         args = [self.visit(exp) for exp in ctx.expression()]
         return f"{name}({', '.join(args)})"
 
