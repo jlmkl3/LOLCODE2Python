@@ -29,8 +29,6 @@ def main():
     sciezka_bez_rozszerzenia, _ = os.path.splitext(file_path)
     wyjsciowy_plik = sciezka_bez_rozszerzenia + ".py"
 
-    with open("kod_python.py","w", encoding="utf-8") as f:
-        f.write(kod_python)
 
     if transpiler.errors:
         for error in transpiler.errors:
