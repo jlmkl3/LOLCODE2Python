@@ -21,10 +21,15 @@ def main():
     parser.removeErrorListeners()
     parser.addErrorListener(LolcodeErrorListener())
 
-    tree=parser.program()
+    try:
+        tree = parser.program()
 
-    transpiler = Lolcode2Python()
-    kod_python = transpiler.visit(tree)
+        transpiler = Lolcode2Python()
+        kod_python = transpiler.visit(tree)
+
+    except Exception as e:
+        print(e)
+        sys.exit()
 
     sciezka_bez_rozszerzenia, _ = os.path.splitext(file_path)
     wyjsciowy_plik = sciezka_bez_rozszerzenia + ".py"
