@@ -286,3 +286,26 @@ Nasz transpiler posiada wbudowany analizator semantyczny. W przypadku wykrycia b
 
 Wygenerowano pusty plik: 'test.py'
 ```
+Dodałyśmy również mechanizm obsługi błędów składniowych.
+#### Działanie:
+Kompilator analizuje historię tokenów oraz strukturę błędu, aby zwrócić czytelny komunikat w języku polskim dla najczęstszych potknięć w LOLCODE. Wykrywa m.in.:
+   * Brak argumentów dla instrukcji wypisywania `VISIBLE`.
+   * Brak wartości inicjalizującej po słowie kluczowym `ITZ`.
+   * Pominięcie wymaganego łącznika `YR` w pętlach (`UPPIN` / `NERFIN`).
+   * Brak bloku wykonawczego `YA RLY` po instrukcji warunkowej `O RLY?`.
+
+>**Przykład działania:** 
+>Zamiast generycznego błędu typu `mismatched input 'KTHXBYE' expecting {'NUMBR', 'YARN'}`, nasz interpreter po napotkaniu pustego `VISIBLE` wypisze:
+> ```text
+> [BŁĄD SKŁADNIOWY]
+> Linia: 4, Kolumna: 12
+> Błąd: Brak argumentu dla instrukcji wypisywania 'VISIBLE'.
+> ```
+
+Jeżeli błąd wykracza poza zdefiniowaną przez nas pulę specyficznych sytuacji, system generuje komunikat generyczny. Wyświetla on precyzyjną lokalizację błędu (linia, kolumna) oraz dołącza surowy fragment diagnostyczny wygenerowany bezpośrednio przez ANTLR4, co ułatwia dalszy debugging.
+>```text
+>[BŁĄD SKŁADNIOWY]
+>Linia: 40, Kolumna: 1
+>Napotkano niepoprawny token: 'KTHXBYEEE'
+>Co powinno tu być: KTHXBYE
+>Szczegóły techniczne ANTLR: mismatched input 'KTHXBYEEE' expecting KTHXBYE
